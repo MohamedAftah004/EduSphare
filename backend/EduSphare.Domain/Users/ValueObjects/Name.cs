@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using EduSphare.Domain.Common;
 
-namespace EduSphare.Domain.Users.VOs
+namespace EduSphare.Domain.Users.ValueObjects
 {
     public sealed class Name : ValueObject
     {

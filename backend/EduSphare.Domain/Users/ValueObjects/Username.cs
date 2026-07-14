@@ -1,7 +1,7 @@
 ﻿using EduSphare.Domain.Common;
 using System.Text.RegularExpressions;
 
-namespace EduSphare.Domain.Users.VOs;
+namespace EduSphare.Domain.Users.ValueObjects;
 
 public sealed class Username : ValueObject
 {

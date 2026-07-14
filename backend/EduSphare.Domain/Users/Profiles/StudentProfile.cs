@@ -16,17 +16,23 @@ namespace EduSphare.Domain.Users.Profiles
         public DateTime DateOfBirth { get; private set; }
 
         public int CountryId { get; private set; }
-        public int NumberOfStudents { get; private set; }
 
-        public static StudentProfile Create(ImageUrl? profileImageUrl, string? bio, DateTime dateOfBirth, int countryId)
+        public Guid UserId { get; private set; }
+        public User User { get; private set; } = null!;
+
+
+        public static StudentProfile Create(Guid userId , ImageUrl? profileImageUrl, string? bio, DateTime dateOfBirth, int countryId)
         {
+            EnsureValidDateOfBirth(dateOfBirth);
+
+
             return new StudentProfile
             {
+                UserId = userId,
                 ProfileImageUrl = profileImageUrl,
                 Bio = bio,
                 DateOfBirth = dateOfBirth,
                 CountryId = countryId,
-                NumberOfStudents = 0
             };
         }
 
@@ -36,6 +42,8 @@ namespace EduSphare.Domain.Users.Profiles
         //update profile
         public void UpdateProfile(ImageUrl? profileImageUrl, string? bio, DateTime dateOfBirth, int countryId)
         {
+            EnsureValidDateOfBirth(dateOfBirth);
+
             ProfileImageUrl = profileImageUrl;
             Bio = bio;
             DateOfBirth = dateOfBirth;
@@ -60,6 +68,8 @@ namespace EduSphare.Domain.Users.Profiles
         //change date of birth
         public void ChangeDateOfBirth(DateTime dateOfBirth)
         {
+            EnsureValidDateOfBirth(dateOfBirth);
+
             DateOfBirth = dateOfBirth;
             SetUpdated();
         }
@@ -71,27 +81,20 @@ namespace EduSphare.Domain.Users.Profiles
             SetUpdated();
         }
 
-        //increment number of students
-        public void IncrementNumberOfStudents()
-        {
-            NumberOfStudents++;
-            SetUpdated();
-        }
 
-        //decrement number of students
-        public void DecrementNumberOfStudents()
-        {
-            if (NumberOfStudents > 0)
-            {
-                NumberOfStudents--;
-                SetUpdated();
-            }
-            else
-            {
-                throw new InvalidOperationException("Number of students cannot be less than zero.");
-            }
-        }
 
+
+        #region Helper Functions
+
+        //helper functions
+
+
+        private static void EnsureValidDateOfBirth(DateTime dateOfBirth)
+        {
+            if (dateOfBirth > DateTime.UtcNow.Date)
+                throw new InvalidOperationException("Date of birth cannot be in the future.");
+        }
+        #endregion
 
     }
 }

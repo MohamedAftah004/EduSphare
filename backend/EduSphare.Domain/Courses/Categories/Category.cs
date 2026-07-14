@@ -1,6 +1,6 @@
 ﻿using EduSphare.Domain.Common;
 using EduSphare.Domain.Courses.ValueObjects;
-using EduSphare.Domain.Users.VOs;
+using EduSphare.Domain.Users.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Text;

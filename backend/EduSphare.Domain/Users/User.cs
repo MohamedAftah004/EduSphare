@@ -1,6 +1,6 @@
 ﻿using EduSphare.Domain.Common;
 using EduSphare.Domain.Users.Profiles;
-using EduSphare.Domain.Users.VOs;
+using EduSphare.Domain.Users.ValueObjects;
 
 namespace EduSphare.Domain.Users
 {
@@ -35,12 +35,13 @@ namespace EduSphare.Domain.Users
         #region User Behaviors 
 
         //create User factory method
-        public static User Create(Name firstName, Name lastName, Email email, PasswordHash passwordHash, UserRole role)
+        public static User Create(Name firstName, Name lastName, Username username , Email email, PasswordHash passwordHash, UserRole role)
         {
             var user = new User
             {
                 FirstName = firstName,
                 LastName = lastName,
+                UserName = username,
                 Email = email,
                 PasswordHash = passwordHash,
                 Status = UserStatus.PendingEmailVerification,
@@ -83,6 +84,15 @@ namespace EduSphare.Domain.Users
             }
 
             Status = UserStatus.Active;
+        }
+
+        public void MarkAsDeleted()
+        {
+            if (Status != UserStatus.Suspended)
+                throw new InvalidOperationException(
+                    "Only suspended users can be deleted.");
+
+            Status = UserStatus.Deleted;
         }
 
 
