@@ -1,4 +1,4 @@
-﻿namespace EduSphare.API.Auth.Requests
+﻿namespace EduSphare.API.Auth.Contracts
 {
     public sealed record RegisterRequest(
         string FirstName,

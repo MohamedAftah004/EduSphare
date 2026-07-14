@@ -1,4 +1,4 @@
-﻿using EduSphare.API.Auth.Requests;
+﻿using EduSphare.API.Auth.Contracts;
 using EduSphare.Application.Auth.Register;
 using MediatR;
 using Microsoft.AspNetCore.Http;

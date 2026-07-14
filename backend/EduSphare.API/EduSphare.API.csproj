@@ -22,6 +22,7 @@
   <ItemGroup>
     <Folder Include="Common\Middlewares\" />
     <Folder Include="Common\Extensions\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
   <ItemGroup>
