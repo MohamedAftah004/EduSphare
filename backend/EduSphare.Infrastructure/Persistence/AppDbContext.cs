@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using EduSphare.Application.Abstractions.Persistence;
 using EduSphare.Domain.Users;
+using EduSphare.Domain.Verifications;
 
 namespace EduSphare.Infrastructure.Persistence
 {
@@ -16,6 +17,7 @@ namespace EduSphare.Infrastructure.Persistence
         #region DbSets
 
         public DbSet<User> Users => Set<User>();
+        public DbSet<Verification> Verifications => Set<Verification>();
 
         #endregion
 

@@ -24,3 +24,6 @@ Thumbs.db
 
 # NuGet
 packages/
+
+# Local configuration
+appsettings.Development.json

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using EduSphare.Domain.Users.ValueObjects;
 
 namespace EduSphare.Application.Abstractions.Security
 {
-    public interface IPasswordHasher
+    public interface IVerificationCodeGenerator
     {
-        PasswordHash Hash(string password);
-
+        string Generate();
     }
 }

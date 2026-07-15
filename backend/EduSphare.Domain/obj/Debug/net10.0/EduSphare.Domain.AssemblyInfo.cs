@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EduSphare.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5947d7a3471a8eb4ee977a555fba9425b3c1a38f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4247bd1e494e11b9fec1478914c231bcd5da61d")]
 [assembly: System.Reflection.AssemblyProductAttribute("EduSphare.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EduSphare.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

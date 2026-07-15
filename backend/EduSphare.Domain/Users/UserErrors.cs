@@ -9,6 +9,11 @@ public static class UserErrors
             "Users.InvalidCredentials",
             "Invalid email or password.");
 
+    public static readonly Error UserNotFound =
+        new(
+            "Users.UserNotFound",
+            "User not found.");
+
     public static readonly Error EmailAlreadyVerified =
         new(
             "Users.EmailAlreadyVerified",
