@@ -1,25 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EduSphare.Application.Abstractions.Security;
-using EduSphare.Domain.Users;
+﻿using EduSphare.Application.Abstractions.Security;
 using EduSphare.Domain.Users.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 
-namespace EduSphare.Infrastructure.Security
+public sealed class PasswordHasher : IPasswordHasher
 {
-    public sealed class PasswordHasher : IPasswordHasher
+    private readonly PasswordHasher<object> _hasher = new();
+
+    public PasswordHash Hash(string password)
     {
+        var hash = _hasher.HashPassword(null!, password);
 
-        private readonly PasswordHasher<object> _hasher = new();
+        return PasswordHash.Create(hash);
+    }
 
+    public bool Verify(string password, PasswordHash passwordHash)
+    {
+        var result = _hasher.VerifyHashedPassword(
+            null!,
+            passwordHash.Value,
+            password);
 
-        public PasswordHash Hash(string password)
-        {
-
-            var hash = _hasher.HashPassword(null!, password);
-            return PasswordHash.Create(hash);
-
-        }
+        return result != PasswordVerificationResult.Failed;
     }
 }

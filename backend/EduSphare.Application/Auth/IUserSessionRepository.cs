@@ -1,6 +1,7 @@
-﻿using EduSphare.Domain.Users.Sessions.VO;
+﻿using EduSphare.Domain.Users.Sessions;
+using EduSphare.Domain.Users.Sessions.ValueObjects;
 
-namespace EduSphare.Domain.Users.Sessions
+namespace EduSphare.Application.Auth
 {
     public interface IUserSessionRepository
     {
@@ -9,7 +10,7 @@ namespace EduSphare.Domain.Users.Sessions
             CancellationToken cancellationToken = default);
 
         Task<UserSession?> GetByRefreshTokenAsync(
-            RefreshToken refreshToken,
+            RefreshTokenHash refreshTokenHash,
             CancellationToken cancellationToken = default);
 
         Task<List<UserSession>> GetByUserIdAsync(

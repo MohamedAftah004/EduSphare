@@ -1,10 +1,12 @@
 ﻿using EduSphare.API.Auth.Contracts;
+using EduSphare.Application.Auth.Login;
 using EduSphare.Application.Auth.Register;
 using EduSphare.Application.Auth.ResendVerification;
 using EduSphare.Application.Auth.VerifyEmail;
 using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EduSphare.API.Auth
 {
@@ -83,5 +85,45 @@ namespace EduSphare.API.Auth
                 Message = "Verification code has been sent."
             });
         }
+
+
+
+        //login
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(
+            LoginRequest request,
+            CancellationToken cancellationToken)
+        {
+            var command = new LoginCommand(request.Email, request.Password);
+            var result = await _sender.Send(command, cancellationToken);
+
+            if (result.IsFailure)
+            {
+                return Unauthorized(result.Error);
+            }
+
+            var response = new Contracts.LoginResponse(
+                result.Value.AccessToken,
+                result.Value.RefreshToken);
+
+
+            return Ok(response);
+        }
+
+
+        //test autohrize
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult Me()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return Ok(new
+            {
+                UserId = userId
+            });
+        }
     }
+
 }

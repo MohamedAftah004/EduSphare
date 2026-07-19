@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using EduSphare.Domain.Common;
-using EduSphare.Domain.Users.Sessions.VO;
+using EduSphare.Domain.Users.Sessions.ValueObjects;
 
 namespace EduSphare.Domain.Users.Sessions
 {
@@ -12,7 +12,7 @@ namespace EduSphare.Domain.Users.Sessions
 
         //user session id already implemented by auditable entity
         public Guid UserId { get; private set; }
-        public RefreshToken RefreshToken { get; private set; }
+        public RefreshTokenHash RefreshTokenHash { get; private set; }
         public string DeviceName { get; private set; }
         public string IpAddress { get; private set; }
         public string UserAgent { get; private set; }
@@ -29,7 +29,7 @@ namespace EduSphare.Domain.Users.Sessions
 
         //create a new user session
         public static UserSession Create(Guid userId,
-            RefreshToken refreshToken,
+            RefreshTokenHash refreshTokenHash,
             string deviceName,
             string ipAddress,
             string userAgent,
@@ -38,7 +38,7 @@ namespace EduSphare.Domain.Users.Sessions
             return new UserSession
             {
                 UserId = userId,
-                RefreshToken = refreshToken,
+                RefreshTokenHash = refreshTokenHash,
                 DeviceName = deviceName,
                 IpAddress = ipAddress,
                 UserAgent = userAgent,
@@ -69,9 +69,9 @@ namespace EduSphare.Domain.Users.Sessions
         }
 
         //rotate refresh token
-        public void RotateRefreshToken(RefreshToken newRefreshToken, DateTime expiresAt)
+        public void RotateRefreshToken(RefreshTokenHash newRefreshTokenHash, DateTime expiresAt)
         {
-            RefreshToken = newRefreshToken;
+            RefreshTokenHash = newRefreshTokenHash;
             ExpiresAt = expiresAt;
             LastActivityAt = DateTime.UtcNow;
 

@@ -17,6 +17,7 @@ namespace EduSphare.Application
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             return services;
+            
         }
 
     }

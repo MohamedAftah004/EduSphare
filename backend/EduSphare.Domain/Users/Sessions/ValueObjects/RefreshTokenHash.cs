@@ -1,18 +1,18 @@
 ﻿using EduSphare.Domain.Common;
 
-namespace EduSphare.Domain.Users.Sessions.VO
+namespace EduSphare.Domain.Users.Sessions.ValueObjects
 {
-    public sealed class RefreshToken : ValueObject
+    public sealed class RefreshTokenHash : ValueObject
     {
 
         public string Value { get; }
 
-        private RefreshToken(string value)
+        private RefreshTokenHash(string value)
         {
             Value = value;
         }
 
-        public static RefreshToken Create(string value)
+        public static RefreshTokenHash Create(string value)
         {
 
             if (string.IsNullOrWhiteSpace(value))
@@ -22,7 +22,7 @@ namespace EduSphare.Domain.Users.Sessions.VO
                     nameof(value));
             }
 
-            return new RefreshToken(value);
+            return new RefreshTokenHash(value);
         }
 
         protected override IEnumerable<object?> GetEqualityComponents()
