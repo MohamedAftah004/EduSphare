@@ -1,5 +1,6 @@
 ﻿using EduSphare.API.Auth.Contracts;
 using EduSphare.Application.Auth.Login;
+using EduSphare.Application.Auth.RefreshToken;
 using EduSphare.Application.Auth.Register;
 using EduSphare.Application.Auth.ResendVerification;
 using EduSphare.Application.Auth.VerifyEmail;
@@ -110,6 +111,32 @@ namespace EduSphare.API.Auth
 
             return Ok(response);
         }
+
+
+        //refresh token
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken(
+            RefreshTokenRequest request,
+            CancellationToken cancellationToken)
+        {
+            var command = new RefreshTokenCommand(request.RefreshToken);
+
+            var result = await _sender.Send(
+                command,
+                cancellationToken);
+
+            if (result.IsFailure)
+            {
+                return Unauthorized(result.Error);
+            }
+
+            var response = new Contracts.RefreshTokenResponse(
+                result.Value.AccessToken,
+                result.Value.RefreshToken);
+
+            return Ok(response);
+        }
+
 
 
         //test autohrize
