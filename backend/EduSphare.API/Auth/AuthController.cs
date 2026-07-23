@@ -11,6 +11,8 @@ using System.Security.Claims;
 using EduSphare.API.Common;
 using EduSphare.Application.Auth.Logout;
 using EduSphare.Application.Auth.LogoutAll;
+using EduSphare.Application.Auth.ForgotPassword;
+using EduSphare.Application.Auth.ResetPassword;
 
 namespace EduSphare.API.Auth
 {
@@ -176,6 +178,45 @@ namespace EduSphare.API.Auth
             Response.Cookies.Delete("refreshToken");
 
             return NoContent();
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(
+            ForgotPasswordRequest request,
+            CancellationToken cancellationToken)
+        {
+            var command = new ForgotPasswordCommand(request.Email);
+
+            var result = await _sender.Send(command, cancellationToken);
+
+            if (result.IsFailure)
+                return BadRequest(result.Error);
+
+            return Ok(new
+            {
+                Message = "Password reset code has been sent to your email."
+            });
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(
+            ResetPasswordRequest request,
+            CancellationToken cancellationToken)
+        {
+            var command = new ResetPasswordCommand(
+                request.Email,
+                request.Code,
+                request.NewPassword);
+
+            var result = await _sender.Send(command, cancellationToken);
+
+            if (result.IsFailure)
+                return BadRequest(result.Error);
+
+            return Ok(new
+            {
+                Message = "Password has been reset successfully."
+            });
         }
 
 
