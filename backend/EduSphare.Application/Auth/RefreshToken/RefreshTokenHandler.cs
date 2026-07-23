@@ -1,4 +1,4 @@
-﻿using EduSphare.Application.Abstractions.Persistence;
+using EduSphare.Application.Abstractions.Persistence;
 using EduSphare.Application.Abstractions.Security;
 using EduSphare.Application.Common;
 using EduSphare.Domain.Users;
@@ -42,7 +42,7 @@ public sealed class RefreshTokenHandler
         var refreshTokenHash = RefreshTokenHash.Create(_refreshTokenHasher.Hash(request.RefreshToken));
 
         // Find session
-        var session = await _userSessionRepository.GetByRefreshTokenAsync(
+        var session = await _userSessionRepository.GetByRefreshTokenHashAsync(
             refreshTokenHash,
             cancellationToken);
 
@@ -52,13 +52,13 @@ public sealed class RefreshTokenHandler
                 SessionErrors.InvalidRefreshToken);
         }
 
-        if (session.IsRevoked())
+        if (session.IsRevoked)
         {
             return Result.Failure<RefreshTokenResponse>(
                 SessionErrors.Revoked);
         }
 
-        if (session.IsExpired())
+        if (session.IsExpired)
         {
             return Result.Failure<RefreshTokenResponse>(
                 SessionErrors.RefreshTokenExpired);
@@ -76,7 +76,7 @@ public sealed class RefreshTokenHandler
         }
 
         // Generate new access token
-        var accessToken = _jwtProvider.Generate(user);
+        var accessToken = _jwtProvider.Generate(user, session.Id);
 
         // Generate new refresh token
         var newRefreshToken =

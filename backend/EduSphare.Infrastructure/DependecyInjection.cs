@@ -1,4 +1,4 @@
-﻿using EduSphare.Application.Abstractions.Communication;
+using EduSphare.Application.Abstractions.Communication;
 using EduSphare.Application.Abstractions.Persistence;
 using EduSphare.Application.Abstractions.Security;
 using EduSphare.Application.Auth;
@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace EduSphare.Infrastructure;
@@ -83,6 +84,34 @@ public static class DependecyInjection
                         Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
 
                     ClockSkew = TimeSpan.Zero
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = async context =>
+                    {
+                        var sessionIdClaim = context.Principal?.FindFirst("session_id")?.Value
+                            ?? context.Principal?.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
+
+                        if (string.IsNullOrEmpty(sessionIdClaim) || !Guid.TryParse(sessionIdClaim, out var sessionId))
+                        {
+                            context.Fail("Invalid session claim in token.");
+                            return;
+                        }
+
+                        var userSessionRepository = context.HttpContext.RequestServices
+                            .GetRequiredService<IUserSessionRepository>();
+
+                        var session = await userSessionRepository.GetByIdAsync(
+                            sessionId,
+                            context.HttpContext.RequestAborted);
+
+                        if (session is null || !session.IsActive)
+                        {
+                            context.Fail("Session is inactive or has been revoked.");
+                            return;
+                        }
+                    }
                 };
             });
 

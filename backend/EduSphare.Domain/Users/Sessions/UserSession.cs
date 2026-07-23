@@ -13,9 +13,9 @@ namespace EduSphare.Domain.Users.Sessions
         //user session id already implemented by auditable entity
         public Guid UserId { get; private set; }
         public RefreshTokenHash RefreshTokenHash { get; private set; }
-        public string DeviceName { get; private set; }
+        public string? DeviceName { get; private set; }
         public string IpAddress { get; private set; }
-        public string UserAgent { get; private set; }
+        public string? UserAgent { get; private set; }
 
         public DateTime ExpiresAt { get; private set; }
 
@@ -23,6 +23,14 @@ namespace EduSphare.Domain.Users.Sessions
 
         public DateTime LastActivityAt { get; private set; }
 
+        public bool IsExpired
+            => DateTime.UtcNow >= ExpiresAt;
+
+        public bool IsRevoked
+            => RevokedAt is not null;
+
+        public bool IsActive
+            => !IsExpired && !IsRevoked;
 
 
         #region Behaviors
@@ -52,9 +60,7 @@ namespace EduSphare.Domain.Users.Sessions
         public void Revoke()
         {
             if (RevokedAt is not null)
-            {
-                throw new InvalidOperationException("Session is already revoked.");
-            }
+                return;
 
             RevokedAt = DateTime.UtcNow;
             SetUpdated();
@@ -71,6 +77,11 @@ namespace EduSphare.Domain.Users.Sessions
         //rotate refresh token
         public void RotateRefreshToken(RefreshTokenHash newRefreshTokenHash, DateTime expiresAt)
         {
+            ArgumentNullException.ThrowIfNull(newRefreshTokenHash);
+
+            if (expiresAt <= DateTime.UtcNow)
+                throw new InvalidOperationException();
+
             RefreshTokenHash = newRefreshTokenHash;
             ExpiresAt = expiresAt;
             LastActivityAt = DateTime.UtcNow;
@@ -78,26 +89,6 @@ namespace EduSphare.Domain.Users.Sessions
             SetUpdated();
         }
 
-
-
-        #region Helpers Functions
-
-        public bool IsExpired()
-        {
-            return DateTime.UtcNow > ExpiresAt;
-        }
-
-        public bool IsRevoked()
-        {
-            return RevokedAt.HasValue;
-        }
-
-        public bool IsActive()
-        {
-            return !IsExpired() && !IsRevoked();
-        }
-
-        #endregion
 
         #endregion
 

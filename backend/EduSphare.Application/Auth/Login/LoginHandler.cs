@@ -1,4 +1,4 @@
-﻿using EduSphare.Application.Abstractions.Communication;
+using EduSphare.Application.Abstractions.Communication;
 using EduSphare.Application.Abstractions.Persistence;
 using EduSphare.Application.Abstractions.Security;
 using EduSphare.Application.Common;
@@ -71,8 +71,6 @@ public sealed class LoginHandler : IRequestHandler<LoginCommand, Result<LoginRes
                 UserErrors.EmailNotVerified);
         }
 
-        var accessToken = _jwtProvider.Generate(user);
-
         var refreshToken = _refreshTokenGenerator.Generate();
 
         var refreshTokenHash = _refreshTokenHasher.Hash(refreshToken);
@@ -90,6 +88,8 @@ public sealed class LoginHandler : IRequestHandler<LoginCommand, Result<LoginRes
             cancellationToken);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var accessToken = _jwtProvider.Generate(user, session.Id);
 
         return Result.Success(
             new LoginResponse(

@@ -9,12 +9,15 @@ namespace EduSphare.Application.Auth
             Guid id,
             CancellationToken cancellationToken = default);
 
-        Task<UserSession?> GetByRefreshTokenAsync(
+        Task<UserSession?> GetByRefreshTokenHashAsync(
             RefreshTokenHash refreshTokenHash,
             CancellationToken cancellationToken = default);
 
         Task<List<UserSession>> GetByUserIdAsync(
             Guid userId,
+            CancellationToken cancellationToken = default);
+
+        Task<List<UserSession>> GetActiveSessionsByUserIdAsync(Guid userId,
             CancellationToken cancellationToken = default);
 
         Task AddAsync(

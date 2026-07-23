@@ -1,4 +1,4 @@
-﻿using EduSphare.Domain.Users.Sessions;
+using EduSphare.Domain.Users.Sessions;
 using EduSphare.Domain.Users.Sessions.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace EduSphare.Infrastructure.Persistence.Repositories
                     cancellationToken);
         }
 
-        public async Task<UserSession?> GetByRefreshTokenAsync(
+        public async Task<UserSession?> GetByRefreshTokenHashAsync(
             RefreshTokenHash refreshTokenHash,
             CancellationToken cancellationToken = default)
         {
@@ -42,6 +42,15 @@ namespace EduSphare.Infrastructure.Persistence.Repositories
         {
             return await _context.UserSessions
                 .Where(x => x.UserId == userId)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<List<UserSession>> GetActiveSessionsByUserIdAsync(
+            Guid userId,
+            CancellationToken cancellationToken = default)
+        {
+            return await _context.UserSessions
+                .Where(x => x.UserId == userId && x.RevokedAt == null && x.ExpiresAt > DateTime.UtcNow)
                 .ToListAsync(cancellationToken);
         }
 

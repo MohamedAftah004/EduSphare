@@ -276,24 +276,6 @@ namespace EduSphare.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("EduSphare.Domain.Common.ValueObjects.ImageUrl", "ProfileImageUrl", b1 =>
-                        {
-                            b1.Property<Guid>("AdminProfileId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Value")
-                                .HasMaxLength(500)
-                                .HasColumnType("nvarchar(500)")
-                                .HasColumnName("ProfileImageUrl");
-
-                            b1.HasKey("AdminProfileId");
-
-                            b1.ToTable("AdminProfiles");
-
-                            b1.WithOwner()
-                                .HasForeignKey("AdminProfileId");
-                        });
-
                     b.OwnsOne("EduSphare.Domain.Users.Profiles.VO.EmployeeCode", "EmployeeCode", b1 =>
                         {
                             b1.Property<Guid>("AdminProfileId")
@@ -310,7 +292,7 @@ namespace EduSphare.Infrastructure.Migrations
                             b1.HasIndex("Value")
                                 .IsUnique();
 
-                            b1.ToTable("AdminProfiles");
+                            b1.ToTable("AdminProfiles", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("AdminProfileId");
@@ -332,7 +314,25 @@ namespace EduSphare.Infrastructure.Migrations
                             b1.HasIndex("Value")
                                 .IsUnique();
 
-                            b1.ToTable("AdminProfiles");
+                            b1.ToTable("AdminProfiles", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("AdminProfileId");
+                        });
+
+                    b.OwnsOne("EduSphare.Domain.Common.ValueObjects.ImageUrl", "ProfileImageUrl", b1 =>
+                        {
+                            b1.Property<Guid>("AdminProfileId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .HasMaxLength(500)
+                                .HasColumnType("nvarchar(500)")
+                                .HasColumnName("ProfileImageUrl");
+
+                            b1.HasKey("AdminProfileId");
+
+                            b1.ToTable("AdminProfiles", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("AdminProfileId");
@@ -369,7 +369,7 @@ namespace EduSphare.Infrastructure.Migrations
 
                             b1.HasKey("InstructorProfileId");
 
-                            b1.ToTable("InstructorProfiles");
+                            b1.ToTable("InstructorProfiles", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("InstructorProfileId");
@@ -400,7 +400,7 @@ namespace EduSphare.Infrastructure.Migrations
 
                             b1.HasKey("StudentProfileId");
 
-                            b1.ToTable("StudentProfiles");
+                            b1.ToTable("StudentProfiles", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("StudentProfileId");

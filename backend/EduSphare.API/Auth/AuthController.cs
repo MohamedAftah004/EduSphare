@@ -1,4 +1,4 @@
-﻿using EduSphare.API.Auth.Contracts;
+using EduSphare.API.Auth.Contracts;
 using EduSphare.Application.Auth.Login;
 using EduSphare.Application.Auth.RefreshToken;
 using EduSphare.Application.Auth.Register;
@@ -8,11 +8,14 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using EduSphare.API.Common;
+using EduSphare.Application.Auth.Logout;
+using EduSphare.Application.Auth.LogoutAll;
 
 namespace EduSphare.API.Auth
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
 
@@ -137,6 +140,46 @@ namespace EduSphare.API.Auth
             return Ok(response);
         }
 
+        //logout
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout(
+            LogoutRequest request,
+            CancellationToken cancellationToken)
+        {
+            var result = await _sender.Send(
+                new LogoutCommand(request.RefreshToken),
+                cancellationToken);
+
+            if (result.IsFailure)
+                return BadRequest(result.Error);
+
+            Response.Cookies.Delete("refreshToken");
+
+            return NoContent();
+        }
+
+        //logout All devices
+        [Authorize]
+        [HttpPost("logout-all")]
+        public async Task<IActionResult> LogoutAll(
+            CancellationToken cancellationToken)
+        {
+            var userId = User.GetUserId();
+
+            var result = await _sender.Send(
+                new LogoutAllCommand(userId),
+                cancellationToken);
+
+            if (result.IsFailure)
+                return BadRequest(result.Error);
+
+            Response.Cookies.Delete("refreshToken");
+
+            return NoContent();
+        }
+
+
+
 
 
         //test autohrize
@@ -146,6 +189,7 @@ namespace EduSphare.API.Auth
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+           
             return Ok(new
             {
                 UserId = userId

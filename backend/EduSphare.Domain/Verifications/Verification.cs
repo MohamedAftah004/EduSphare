@@ -30,6 +30,7 @@ namespace EduSphare.Domain.Verifications
 
            return new Verification
            {
+               
                UserId = userId,
                CodeHash = codeHash,
                Purpose = purpose,
